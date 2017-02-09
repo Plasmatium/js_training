@@ -1,0 +1,20 @@
+{
+  "name": "js_training",
+  "version": "0.0.1",
+  "description": "code fragment about js training or testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "hjs-dev-server"
+  },
+  "author": "J.W.",
+  "license": "ISC",
+  "dependencies": {
+    "hjs-webpack": "^8.4.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-latest": "^6.22.0"
+  }
+}
