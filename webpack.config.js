@@ -19,5 +19,5 @@ let cfg = getConfig({
   clearBeforeBuild: true,
 });
 //cfg.entry = ['babel-polyfill', ...cfg.entry];
-//console.log(cfg);
+console.log(cfg);
 module.exports = cfg;
