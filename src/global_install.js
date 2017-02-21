@@ -32,11 +32,12 @@ global.__ = __;
  * placeholder，则保留位置，不填充，直至所
  * 有placeholder被填充，然后求值函数。
 */
-const _curry = function(func, arg_list, curr_args, ph_position) {
+const _curry = function(func, arg_list, curr_args) {
   // func：原始函数
   // arg_list：当前已经收集的真实参数列表
   // curr_args：当前的调用所传递进来的参数列表
   // ph_position：placeholder所在位置
+/*
 debugger;
   let len1 = ph_position.length;
   let len2 = curr_args.length;
@@ -51,9 +52,25 @@ debugger;
   if(ph_position.length === 0) {
       return func(...arg_list);
   }
+  */
+
+  let gen_curr_args = curr_args.entries();
+  for(let idx of arg_list) {
+    if(arg_list[idx] !== __) continue;
+
+    let packaged_passed_in_arg = gen_curr_args.next();
+    if(packaged_passed_in_arg.done === true) break;
+
+    let arg_value = packaged_passed_in_arg.value[1];
+    arg_list[idx] = arg_value; 
+  }
+
+  if(!arg_list.includes(__)) {
+    return func(...arg_list);
+  }
 
   return function () {
-    return _curry(func, [...arg_list], [...arguments], [...ph_position]);
+    return _curry(func, [...arg_list], [...arguments]);
   }
 };
 
@@ -68,6 +85,6 @@ global.curry = (func) => {
 
 
 //test func
-const func = (x,y,z,a,b,c) => console.log(a,b,c,x,y,z);
+global.func = (x,y,z,a,b,c) => console.log(a,b,c,x,y,z);
 global.cf = curry(func);
 //==========redux, big reducer===============
