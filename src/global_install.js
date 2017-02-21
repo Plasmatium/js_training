@@ -32,54 +32,38 @@ global.__ = __;
  * placeholder，则保留位置，不填充，直至所
  * 有placeholder被填充，然后求值函数。
 */
-const _curry = function(func, arg_list, curr_args) {
+const _curry = function(func, arg_list, curr_args, arg_cursor) {
   // func：原始函数
   // arg_list：当前已经收集的真实参数列表
   // curr_args：当前的调用所传递进来的参数列表
   // ph_position：placeholder所在位置
-/*
-debugger;
-  let len1 = ph_position.length;
-  let len2 = curr_args.length;
-  for(let i=0; i<Math.min(len1, len2); i++) {
-    let arg = curr_args.shift();
-    if(arg !== __) {
-      let idx = ph_position.shift();
-      arg_list[idx] = arg;
-    }
-  }
-
-  if(ph_position.length === 0) {
-      return func(...arg_list);
-  }
-  */
 
   let gen_curr_args = curr_args.entries();
-  for(let idx of arg_list) {
-    if(arg_list[idx] !== __) continue;
+  for (; arg_cursor < arg_list.length; arg_cursor++) {
+    if (arg_list[arg_cursor] !== __) continue;
 
     let packaged_passed_in_arg = gen_curr_args.next();
-    if(packaged_passed_in_arg.done === true) break;
+    if (packaged_passed_in_arg.done === true) break;
 
-    let arg_value = packaged_passed_in_arg.value[1];
-    arg_list[idx] = arg_value; 
+    arg_list[arg_cursor] = packaged_passed_in_arg.value[1];
   }
 
-  if(!arg_list.includes(__)) {
-    return func(...arg_list);
+  if (arg_list.includes(__)) {
+    return function () {
+      // 如果arg_cursor光标已经走完了arg_list（即arg_list >= arg_list.length，
+      // 那么说明还有placeholder没有被替换掉，所以arg_cursor从头开始继续。
+      if (arg_cursor >= arg_list.length) arg_cursor = 0;
+      return _curry(func, [...arg_list], [...arguments], arg_cursor);
+    }
   }
-
-  return function () {
-    return _curry(func, [...arg_list], [...arguments]);
-  }
+  return func(...arg_list);
 };
 
 global.curry = (func) => {
   let arg_list = new Array(func.length);
   arg_list.fill(__);
-  let ph_position = arg_list.map((val, idx) => idx);
   return function () {
-    return _curry(func, [...arg_list], [...arguments], [...ph_position]);
+    return _curry(func, [...arg_list], [...arguments], 0);
   }
 };
 
