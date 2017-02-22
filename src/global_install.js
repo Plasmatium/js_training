@@ -15,7 +15,7 @@ global.__ = __;
  * @param  {Array}    curr_args  当前传入的实参
  * @param  {Number}   arg_cursor 循环指针，用以指示arg_list中接下来要
  *                               替换的placeholder
- * @return {AnyValue|Function}   返回func(...arg_list)执行结果，或者返回
+ * @return {*, Function}   返回func(...arg_list)执行结果，或者返回
  *                               具有剩余未被替换的placeholder作为形参的
  *                               函数
  */
@@ -90,12 +90,13 @@ global.reducers = {
 global.initialState = {dollars: 0, euros:0, yens: 0, pounds: 0};
 
 const combineReducer = (reducers) => {
-  return (state, nextItem) => {
-    console.log(nextItem);
-    console.log(state);
-    return Object.keys(reducers).map((key) => {
-      return reducers[key](state, nextItem);
+  return function(state, item) {
+    Object.keys(reducers).forEach((key) => {
+      debugger;
+      reducers[key](state, item);
     });
+
+    return state;
   }
 };
 
