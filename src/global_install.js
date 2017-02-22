@@ -24,20 +24,23 @@ global.curry1 = (func) => {
 const __ = Symbol('@@place_holder');
 global.__ = __;
 
-/******************************
- * 增加placeholder实现，在开始curry时，
- * 原函数有多少参数，就填充多少placeholder，
- * 在调用被curry化的函数时，逐渐用真实参数
- * 填充placeholder，如果给出的真实参数还是
- * placeholder，则保留位置，不填充，直至所
- * 有placeholder被填充，然后求值函数。
-*/
+/**
+ * curry的帮助函数，用以完成curry的内部实现
+ * @param  {Function} func       被curry的原始函数
+ * @param  {Array}    arg_list   保存了将被用于func求值的实参列表
+ * @param  {Array}    curr_args  当前传入的实参
+ * @param  {Number}   arg_cursor 循环指针，用以指示arg_list中接下来要
+ *                               替换的placeholder
+ * @return {AnyValue|Function}   返回func(...arg_list)执行结果，或者返回
+ *                               具有剩余未被替换的placeholder作为形参的
+ *                               函数
+ */
 const _curry = function(func, arg_list, curr_args, arg_cursor) {
-  // func：原始函数
-  // arg_list：当前已经收集的真实参数列表
-  // curr_args：当前的调用所传递进来的参数列表
-  // ph_position：placeholder所在位置
-
+  // curry函数调用此帮助函数时，将会为arg_list填充func.length长度的
+  // '__'(placeholder), 然后逐渐用curr_args中的实参填充到arg_list，
+  // 没填充一次，arg_cursor向后移动一次，直到最后。此时要么全部填充
+  // 完毕，并求值func(...arg_list)，要么返回一个需要从头开始继续填
+  // 充的函数。
   let gen_curr_args = curr_args.entries();
   for (; arg_cursor < arg_list.length; arg_cursor++) {
     if (arg_list[arg_cursor] !== __) continue;
@@ -58,6 +61,7 @@ const _curry = function(func, arg_list, curr_args, arg_cursor) {
   }
   return func(...arg_list);
 };
+
 
 global.curry = (func) => {
   let arg_list = new Array(func.length);
