@@ -1,27 +1,11 @@
 console.log("Installing global_install.js.");
 
-global.x = 'x';
+/**************************
+ * training 1             *
+ * curry with placeholder *
+ **************************/
 
-//curry实现。使用递归方式，每次递归减少相应个数的参数
-const _curry1 = function(func, arg_num_left, arg_list) {
-  if(arg_num_left === 0) {
-    return func(...arg_list);
-  }
-
-  return function() {
-    let new_arg_list = [...arg_list, ...arguments];
-    let diff_arg_num = arg_num_left - arguments.length;
-    let new_arg_num_left = diff_arg_num >= 0 ? diff_arg_num : 0;
-    return _curry1(func, new_arg_num_left, new_arg_list);
-  }
-};
-
-global.curry1 = (func) => {
-  return _curry1(func, func.length, []);
-};
-
-//==========curry with place_holder==========
-const __ = Symbol('@@place_holder');
+const __ = Symbol('@@placeholder');
 global.__ = __;
 
 /**
@@ -75,4 +59,39 @@ global.curry = (func) => {
 //test func
 global.func = (x,y,z,a,b,c) => console.log(a,b,c,x,y,z);
 global.cf = curry(func);
-//==========redux, big reducer===============
+
+/******************************************************
+ * training2                                          *
+ * redux, big reducer                                 *
+ * https://cnodejs.org/topic/56a050ac8392272262331d62 *
+ ******************************************************/
+global.items = [{price: 10}, {price: 120}, {price: 1000}];
+
+var reducers = {
+  totalInDollar: function(state, item) {
+    state.dollars += item.price;
+    return state;
+  },
+  totalInEuros : function(state, item) {
+    state.euros += item.price * 0.897424392;
+    return state;
+  },
+  totalInPounds : function(state, item) {
+    state.pounds += item.price * 0.692688671;
+    return state;
+  },
+  totalInYen : function(state, item) {
+    state.yens += item.price * 113.852;
+    return state;
+  }
+  // more...
+};
+
+var initialState = {dollars: 0, euros:0, yens: 0, pounds: 0};
+
+const combineReducer = (reducers) => {
+  
+};
+
+var tatols = items.reduce(combineReducer(reducers), initialState)
+// {dollars: 1130, euros: 1015.11531904, yens: 127524.24, pounds: 785.81131152}
