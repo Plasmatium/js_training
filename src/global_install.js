@@ -67,7 +67,7 @@ global.cf = curry(func);
  ******************************************************/
 global.items = [{price: 10}, {price: 120}, {price: 1000}];
 
-var reducers = {
+global.reducers = {
   totalInDollar: function(state, item) {
     state.dollars += item.price;
     return state;
@@ -87,11 +87,17 @@ var reducers = {
   // more...
 };
 
-var initialState = {dollars: 0, euros:0, yens: 0, pounds: 0};
+global.initialState = {dollars: 0, euros:0, yens: 0, pounds: 0};
 
 const combineReducer = (reducers) => {
-  
+  return (state, nextItem) => {
+    console.log(nextItem);
+    console.log(state);
+    return Object.keys(reducers).map((key) => {
+      return reducers[key](state, nextItem);
+    });
+  }
 };
 
-var tatols = items.reduce(combineReducer(reducers), initialState)
+global.totals = items.reduce(combineReducer(reducers), initialState)
 // {dollars: 1130, euros: 1015.11531904, yens: 127524.24, pounds: 785.81131152}
