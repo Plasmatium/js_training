@@ -92,7 +92,6 @@ global.initialState = {dollars: 0, euros:0, yens: 0, pounds: 0};
 const combineReducer = (reducers) => {
   return function(state, item) {
     Object.keys(reducers).forEach((key) => {
-      debugger;
       reducers[key](state, item);
     });
 
