@@ -13,6 +13,7 @@ global.testObj = {
 
 global.testWatcher = {
   _targetUpdate: (obj, key, val) => {
+    console.log('A testWatcher invoked!')
     console.log('obj:', obj)
     console.log('key:', key)
     console.log('val:', val)
