@@ -2,7 +2,8 @@ console.log('app.js is running');
 
 require('./global_install');
 require('./request');
-require('./observer.js')
+require('./observer')
+require('./generator_promise')
 //require('./dpf_test.js')
 
 module.hot.accept();
