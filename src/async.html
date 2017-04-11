@@ -1,0 +1,66 @@
+<script>
+
+const round = (x, n) => {
+  return Math.round(x*Math.pow(10,n))/Math.pow(10,n)
+}
+
+const timeout = (t, msg) => {
+  return new Promise((res, rej) => {
+    let func = function (...args) {
+      console.log(t)
+      res(...args)
+    }
+    if (msg == 'err') {
+      func = rej
+    }
+    msg.total += t
+    msg.str += t+'\n'
+    setTimeout(func, t*1000, msg)
+  })
+}
+
+function* steps(n) {
+  let msg = {str:'start:\n', total:0}
+  for (let i=0; i<n; i++) {
+    let t = round(Math.random(), 2)
+    msg = yield timeout(t, msg)
+  }
+
+  msg.str += 'end'
+  return new Promise((res, rej) => res(msg))
+}
+
+
+function excute(g, result) {
+  if (result.done) return result.value
+  return result.value.then(value => {
+    return excute(g, g.next(value))
+  })
+}
+
+function co(gen, ...args) {
+  let g = gen(...args)
+  return excute(g, g.next())
+}
+
+function calc(n) {
+  let start = new Date()
+  co(steps, n).then(msg => {
+    let end = new Date()
+    let interval = (end-start)/1000
+    console.log('cost:', interval)
+    console.log('eval:', msg.total)
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+</script>
