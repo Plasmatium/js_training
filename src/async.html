@@ -7,7 +7,6 @@ const round = (x, n) => {
 const timeout = (t, msg) => {
   return new Promise((res, rej) => {
     let func = function (...args) {
-      console.log(t)
       res(...args)
     }
     if (msg == 'err') {
@@ -19,11 +18,11 @@ const timeout = (t, msg) => {
   })
 }
 
-function* steps(n) {
+async function steps1(n) {
   let msg = {str:'start:\n', total:0}
   for (let i=0; i<n; i++) {
-    let t = round(Math.random(), 2)
-    msg = yield timeout(t, msg)
+    let t = round(Math.random()/10, 2)
+    msg = await timeout(t, msg)
   }
 
   msg.str += 'end'
@@ -45,7 +44,7 @@ function co(gen, ...args) {
 
 function calc(n) {
   let start = new Date()
-  co(steps, n).then(msg => {
+  steps1(n).then(msg => {
     let end = new Date()
     let interval = (end-start)/1000
     console.log('cost:', interval)
@@ -53,14 +52,54 @@ function calc(n) {
   })
 }
 
+function fetch(url) {
+  let t = Math.random()
+  t = Math.round(t*100)/10
+  let msg = `data returned as: ${url}, cost ${t}s.`
+  return timeout(t, msg).then(value => {
+    return Promise.resolve({text: () => msg})
+  })
+}
+
+//------------------------------
+us = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'h10', 'h11', 'h12']
+
+function logInOrder_promise(urls) {
+  // 远程读取所有URL
+  const textPromises = urls.map(url => {
+    return fetch(url).then(response => response.text());
+  });
+
+  // 按次序输出
+  textPromises.reduce((chain, textPromise) => {
+    let arr
+    return chain.then(v => {arr = v;return textPromise})
+      .then(text => {console.log(text);arr.push(text); return arr});
+  }, Promise.resolve([]));
+}
+
+function f(urls) {
+  let ps = urls.map(url => {
+    return fetch(url).then(resp=>resp.text())
+  })
+  //*
+  ps.reduce((chain, p) => {
+    return chain.then(() => p).then(console.log)
+  }, Promise.resolve())
+  //*/
+}
 
 
+async function f2(urls) {
+  let ps = urls.map(url => {
+    return fetch(url).then(resp=>resp.text())
+  })
 
-
-
-
-
-
+  for(let i=0; i<ps.length; i++) {
+    let msg = await ps[i]
+    console.log(msg)
+  }
+}
 
 
 </script>
