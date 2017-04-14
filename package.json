@@ -9,14 +9,16 @@
   },
   "author": "J.W.",
   "license": "ISC",
-  "dependencies": {
-    "hjs-webpack": "^8.4.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
-    "babel-plugin-transform-decorators": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-polyfill": "^6.23.0",
-    "babel-preset-latest": "^6.22.0"
+    "babel-preset-env": "^1.3.3",
+    "babel-preset-latest": "^6.22.0",
+    "hjs-webpack": "^9.1.0",
+    "webpack": "^2.3.3",
+    "webpack-dev-server": "^2.4.2"
   }
 }
