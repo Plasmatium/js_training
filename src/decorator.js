@@ -1,5 +1,6 @@
 function testable(target) {
   target.prototype.isTestable = true
+  target.staticT = 'asdf'
 }
 
 @testable
