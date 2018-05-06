@@ -39,7 +39,7 @@ car2.run('50mph')
 考察以下我们自己实现面向对象要怎么做，首先我们需要一个变量来指代你预想中的一辆`Car`，比如叫self吧，我们可以把`run`方法写成如下形式：
 ```javascript
 Car.run = function run (self, speed) {
-  let fuelVolumn = self.getFuelVol(speed) // 根据形式速度计算燃料需求量
+  let fuelVolumn = self.getFuelVol(speed) // 根据行驶速度计算燃料需求量
   self.pumpFuel() // 泵送燃料
   self.ignite() // 点火
   self.doWork() // 做功
@@ -166,7 +166,7 @@ Array.prototype.log3 = function () {
   // ...
   var that = this
   const callback = function () {
-    console.log('"this" => pointed to:', this) // this会动态改变，代码真正运行到此处时，你不知道this被谁草了，换了谁的孩子。
+    console.log('"this" => pointed to:', this) // this会动态改变，代码真正运行到此处时，你不知道this被谁草了，怀了谁的孩子。
     console.log('"that" => pointed to:', that) // 相反，that作用域就在这个方法内，就被你草过，你非常清楚，非常可控。
   }
   setTimeout(callback, 1000)
@@ -216,7 +216,7 @@ Array.prototype.log5 = () => {
 > 这个this，可以这么理解：在箭头函数之前写个this，这个this指向谁，他就在箭头函数里指向谁，如上面的注释。
 
 ## function和箭头函数比较
-处了以上区别，箭头函数没有arguments！
+除了以上区别，箭头函数没有arguments！
 
 另外，动态作用域也并非完全吃屎，箭头函数也不是完全能替代function。比如：
 1. 在类方法定义中，你首先要有动态作用域获得this，然后才能在里面愉快地使用箭头函数。
