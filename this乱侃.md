@@ -211,7 +211,7 @@ Array.prototype.log5 = () => {
 
 其实箭头函数会忠实地使用它代码上文环境中的this指针，此处是window。如果你把log5定义在其他this环境中并且通过比如return的方式给到Array.prototype，那么它就会使用那个this。假设log5定义在Car的run方法里，那么`[1,2,3].log5()`就可能会打印出car1，car2等。当然如果你不觉得这个this很混乱很乱伦，也可以理解为这种机制很*灵活*
 
-*注：如果箭头函数中又有function，那么this的作用域又会变回动态作用域*
+*注：如果箭头函数中又有function，那么在这个function中，this的作用域又会变回动态作用域*
 
 > 这个this，可以这么理解：在箭头函数之前写个this，这个this指向谁，他就在箭头函数里指向谁，如上面的注释。
 
